@@ -17,21 +17,17 @@ import java.util.stream.Collectors;
 public class TmdbService {
 
     private final WebClient webClient;
-    private final String apiKey;
     private final String imageBaseUrl;
 
     public TmdbService(WebClient tmdbWebClient,
-                       @Value("${tmdb.api.key}") String apiKey,
                        @Value("${tmdb.image-base-url}") String imageBaseUrl) {
         this.webClient = tmdbWebClient;
-        this.apiKey = apiKey;
         this.imageBaseUrl = imageBaseUrl;
     }
 
     public List<Movie> searchMovies(String query, int page) {
         TmdbSearchResponse response = webClient.get()
                 .uri(uri -> uri.path("/search/movie")
-                        .queryParam("api_key", apiKey)
                         .queryParam("query", query)
                         .queryParam("page", page)
                         .build())
@@ -44,14 +40,12 @@ public class TmdbService {
     public Movie getMovie(int tmdbId) {
         Mono<TmdbMovieResponse> movieMono = webClient.get()
                 .uri(uri -> uri.path("/movie/" + tmdbId)
-                        .queryParam("api_key", apiKey)
                         .build())
                 .retrieve()
                 .bodyToMono(TmdbMovieResponse.class);
 
         Mono<TmdbCreditsResponse> creditsMono = webClient.get()
                 .uri(uri -> uri.path("/movie/" + tmdbId + "/credits")
-                        .queryParam("api_key", apiKey)
                         .build())
                 .retrieve()
                 .bodyToMono(TmdbCreditsResponse.class);
@@ -68,7 +62,6 @@ public class TmdbService {
     public List<Movie> getTrendingMovies() {
         TmdbSearchResponse response = webClient.get()
                 .uri(uri -> uri.path("/trending/movie/week")
-                        .queryParam("api_key", apiKey)
                         .build())
                 .retrieve()
                 .bodyToMono(TmdbSearchResponse.class)
@@ -80,7 +73,6 @@ public class TmdbService {
         TmdbDiscoverResponse response = webClient.get()
                 .uri(uri -> {
                     var u = uri.path("/discover/movie")
-                            .queryParam("api_key", apiKey)
                             .queryParam("page", page)
                             .queryParam("sort_by", "vote_average.desc")
                             .queryParam("vote_count.gte", 100);
@@ -102,7 +94,6 @@ public class TmdbService {
     public List<Movie> getRecommendations(int tmdbId) {
         TmdbSearchResponse response = webClient.get()
                 .uri(uri -> uri.path("/movie/" + tmdbId + "/recommendations")
-                        .queryParam("api_key", apiKey)
                         .build())
                 .retrieve()
                 .bodyToMono(TmdbSearchResponse.class)

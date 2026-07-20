@@ -2,3 +2,6 @@ node_modules/
 server/target/
 server/data/
 *.class
+.env
+prometheus_data/
+grafana_data/

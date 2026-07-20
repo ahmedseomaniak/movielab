@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: movielab-api
+    env: java
+    region: frankfurt
+    buildCommand: cd server && ./mvnw clean package -DskipTests
+    startCommand: java -jar server/target/*.jar
+    envVars:
+      - key: TMDB_API_KEY
+        sync: false
+
+  - type: web
+    name: movielab
+    env: static
+    buildCommand: cd client && npm ci && npm run build
+    staticPublishPath: ./client/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://movielab-api.onrender.com/graphql

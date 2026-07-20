@@ -11,8 +11,14 @@ public class WebClientConfig {
     @Value("${tmdb.api.base-url}")
     private String tmdbBaseUrl;
 
+    @Value("${tmdb.api.key}")
+    private String apiKey;
+
     @Bean
     public WebClient tmdbWebClient(WebClient.Builder builder) {
-        return builder.baseUrl(tmdbBaseUrl).build();
+        return builder
+                .baseUrl(tmdbBaseUrl)
+                .defaultHeader("Authorization", "Bearer " + apiKey)
+                .build();
     }
 }

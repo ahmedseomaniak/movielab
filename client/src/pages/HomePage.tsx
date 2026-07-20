@@ -15,14 +15,11 @@ export default function HomePage() {
       {query ? (
         searchData?.searchMovies ? (
           <MovieGrid movies={searchData.searchMovies} title="Search Results" />
+        ) : query && !searchData ? (
+          <MovieGrid loading title="Search Results" />
         ) : null
       ) : (
-        <>
-          {loading && <p>Loading trending...</p>}
-          {trendingData?.trendingMovies && (
-            <MovieGrid movies={trendingData.trendingMovies} title="Trending This Week" />
-          )}
-        </>
+        <MovieGrid movies={trendingData?.trendingMovies} title="Trending This Week" loading={loading} />
       )}
     </div>
   );
