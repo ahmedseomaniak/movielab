@@ -5,3 +5,4 @@ server/data/
 .env
 prometheus_data/
 grafana_data/
+docs/
