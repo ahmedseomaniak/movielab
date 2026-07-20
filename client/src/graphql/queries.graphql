@@ -1,0 +1,77 @@
+query SearchMovies($query: String!, $page: Int) {
+  searchMovies(query: $query, page: $page) {
+    tmdbId
+    title
+    posterUrl
+    releaseDate
+    voteAverage
+    genres
+  }
+}
+
+query TrendingMovies {
+  trendingMovies {
+    tmdbId
+    title
+    posterUrl
+    releaseDate
+    voteAverage
+    genres
+  }
+}
+
+query Movie($tmdbId: Int!) {
+  movie(tmdbId: $tmdbId) {
+    tmdbId
+    title
+    overview
+    posterUrl
+    backdropUrl
+    releaseDate
+    voteAverage
+    genres
+    runtime
+    cast {
+      name
+      character
+      profileUrl
+    }
+  }
+}
+
+query DiscoverMovies($genreIds: [Int!], $minRating: Float, $page: Int) {
+  discoverMovies(genreIds: $genreIds, minRating: $minRating, page: $page) {
+    tmdbId
+    title
+    posterUrl
+    releaseDate
+    voteAverage
+    genres
+  }
+}
+
+query Recommendations($tmdbId: Int!) {
+  recommendations(tmdbId: $tmdbId) {
+    tmdbId
+    title
+    posterUrl
+    releaseDate
+    voteAverage
+    genres
+  }
+}
+
+query Watchlist {
+  watchlist {
+    id
+    watched
+    addedAt
+    movie {
+      tmdbId
+      title
+      posterUrl
+      voteAverage
+      genres
+    }
+  }
+}

@@ -1,0 +1,25 @@
+mutation AddToWatchlist($tmdbId: Int!) {
+  addToWatchlist(tmdbId: $tmdbId) {
+    id
+    watched
+    movie {
+      tmdbId
+      title
+    }
+  }
+}
+
+mutation RemoveFromWatchlist($tmdbId: Int!) {
+  removeFromWatchlist(tmdbId: $tmdbId)
+}
+
+mutation MarkWatched($tmdbId: Int!, $watched: Boolean!) {
+  markWatched(tmdbId: $tmdbId, watched: $watched) {
+    id
+    watched
+    movie {
+      tmdbId
+      title
+    }
+  }
+}
