@@ -62,7 +62,27 @@ docker compose up -d
 # Grafana: http://localhost:3000 (admin/admin)
 ```
 
-## CI/CD
+## Déploiement
 
-- **CI** : GitHub Actions (build & test backend + frontend)
-- **Déploiement** : Render (via `render.yaml`)
+| Couche | Plateforme |
+|---|---|
+| Frontend | Vercel (via CLI) |
+| Backend | SnapDeploy (GitHub integration) |
+| Base de données | Supabase (PostgreSQL gratuit) |
+
+### Backend (SnapDeploy)
+
+1. Créer un compte sur [SnapDeploy](https://snapdeploy.dev) avec GitHub
+2. Connecter le dépôt `bouab/movielab`
+3. Configurer les variables d'environnement :
+   - `SPRING_PROFILES_ACTIVE=postgres`
+   - `TMDB_API_KEY=...`
+   - `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD` (Supabase)
+4. SnapDeploy build et déploie automatiquement sur chaque push
+
+### Frontend (Vercel)
+
+```bash
+cd client
+npx vercel --prod
+```

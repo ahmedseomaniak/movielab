@@ -6,3 +6,8 @@ server/data/
 prometheus_data/
 grafana_data/
 docs/
+.opencode/
+server.err
+server.log
+*.lnk
+opencode.json
