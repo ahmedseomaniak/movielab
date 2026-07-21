@@ -36,6 +36,7 @@ jobs:
         run: ./mvnw test
         env:
           TMDB_API_KEY: ${{ secrets.TMDB_API_KEY || '' }}
+          SPRING_PROFILES_ACTIVE: h2
 
   frontend-build:
     name: Frontend - Type-check, Lint & Build

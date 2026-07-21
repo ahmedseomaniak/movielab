@@ -8,6 +8,24 @@ services:
     envVars:
       - key: TMDB_API_KEY
         sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: postgres
+      - key: PGHOST
+        fromService:
+          type: pserv
+          name: movielab-db
+          property: host
+      - key: PGPORT
+        fromService:
+          type: pserv
+          name: movielab-db
+          property: port
+      - key: PGDATABASE
+        value: movielab
+      - key: PGUSER
+        value: movielab
+      - key: PGPASSWORD
+        sync: false
 
   - type: web
     name: movielab
@@ -17,3 +35,9 @@ services:
     envVars:
       - key: VITE_API_URL
         value: https://movielab-api.onrender.com/graphql
+
+  - type: pserv
+    name: movielab-db
+    plan: free
+    env: postgres
+    region: frankfurt
