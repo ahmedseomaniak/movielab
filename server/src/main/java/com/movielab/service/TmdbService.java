@@ -5,8 +5,7 @@ import com.movielab.model.Movie;
 import com.movielab.model.tmdb.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestClient;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,61 +15,50 @@ import java.util.stream.Collectors;
 @Service
 public class TmdbService {
 
-    private final WebClient webClient;
+    private final RestClient restClient;
     private final String imageBaseUrl;
 
-    public TmdbService(WebClient tmdbWebClient,
+    public TmdbService(RestClient tmdbRestClient,
                        @Value("${tmdb.image-base-url}") String imageBaseUrl) {
-        this.webClient = tmdbWebClient;
+        this.restClient = tmdbRestClient;
         this.imageBaseUrl = imageBaseUrl;
     }
 
     public List<Movie> searchMovies(String query, int page) {
-        TmdbSearchResponse response = webClient.get()
+        TmdbSearchResponse response = restClient.get()
                 .uri(uri -> uri.path("/search/movie")
                         .queryParam("query", query)
                         .queryParam("page", page)
                         .build())
                 .retrieve()
-                .bodyToMono(TmdbSearchResponse.class)
-                .block();
+                .body(TmdbSearchResponse.class);
         return mapToMovies(response != null ? response.getResults() : Collections.emptyList());
     }
 
     public Movie getMovie(int tmdbId) {
-        Mono<TmdbMovieResponse> movieMono = webClient.get()
-                .uri(uri -> uri.path("/movie/" + tmdbId)
-                        .build())
+        TmdbMovieResponse movieResponse = restClient.get()
+                .uri(uri -> uri.path("/movie/" + tmdbId).build())
                 .retrieve()
-                .bodyToMono(TmdbMovieResponse.class);
+                .body(TmdbMovieResponse.class);
 
-        Mono<TmdbCreditsResponse> creditsMono = webClient.get()
-                .uri(uri -> uri.path("/movie/" + tmdbId + "/credits")
-                        .build())
+        TmdbCreditsResponse creditsResponse = restClient.get()
+                .uri(uri -> uri.path("/movie/" + tmdbId + "/credits").build())
                 .retrieve()
-                .bodyToMono(TmdbCreditsResponse.class);
+                .body(TmdbCreditsResponse.class);
 
-        return Mono.zip(movieMono, creditsMono)
-                .map(tuple -> {
-                    TmdbMovieResponse movie = tuple.getT1();
-                    TmdbCreditsResponse credits = tuple.getT2();
-                    return mapToMovie(movie, credits);
-                })
-                .block();
+        return mapToMovie(movieResponse, creditsResponse);
     }
 
     public List<Movie> getTrendingMovies() {
-        TmdbSearchResponse response = webClient.get()
-                .uri(uri -> uri.path("/trending/movie/week")
-                        .build())
+        TmdbSearchResponse response = restClient.get()
+                .uri(uri -> uri.path("/trending/movie/week").build())
                 .retrieve()
-                .bodyToMono(TmdbSearchResponse.class)
-                .block();
+                .body(TmdbSearchResponse.class);
         return mapToMovies(response != null ? response.getResults() : Collections.emptyList());
     }
 
     public List<Movie> discoverMovies(List<Integer> genreIds, Double minRating, int page) {
-        TmdbDiscoverResponse response = webClient.get()
+        TmdbDiscoverResponse response = restClient.get()
                 .uri(uri -> {
                     var u = uri.path("/discover/movie")
                             .queryParam("page", page)
@@ -86,18 +74,15 @@ public class TmdbService {
                     return u.build();
                 })
                 .retrieve()
-                .bodyToMono(TmdbDiscoverResponse.class)
-                .block();
+                .body(TmdbDiscoverResponse.class);
         return mapToMovies(response != null ? response.getResults() : Collections.emptyList());
     }
 
     public List<Movie> getRecommendations(int tmdbId) {
-        TmdbSearchResponse response = webClient.get()
-                .uri(uri -> uri.path("/movie/" + tmdbId + "/recommendations")
-                        .build())
+        TmdbSearchResponse response = restClient.get()
+                .uri(uri -> uri.path("/movie/" + tmdbId + "/recommendations").build())
                 .retrieve()
-                .bodyToMono(TmdbSearchResponse.class)
-                .block();
+                .body(TmdbSearchResponse.class);
         return mapToMovies(response != null ? response.getResults() : Collections.emptyList());
     }
 

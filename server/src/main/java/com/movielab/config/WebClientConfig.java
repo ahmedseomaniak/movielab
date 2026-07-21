@@ -3,7 +3,7 @@ package com.movielab.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 @Configuration
 public class WebClientConfig {
@@ -15,8 +15,8 @@ public class WebClientConfig {
     private String apiKey;
 
     @Bean
-    public WebClient tmdbWebClient(WebClient.Builder builder) {
-        return builder
+    public RestClient tmdbRestClient() {
+        return RestClient.builder()
                 .baseUrl(tmdbBaseUrl)
                 .defaultHeader("Authorization", "Bearer " + apiKey)
                 .build();
