@@ -1,6 +1,13 @@
 import { useWatchlist, useRemoveFromWatchlist, useMarkWatched } from '../hooks/useWatchlist';
 import { useNavigate } from 'react-router-dom';
 
+interface WatchlistEntry {
+  id: string;
+  movie: { tmdbId: number; title: string; posterUrl: string; voteAverage: number; genres: string[] };
+  watched: boolean;
+  addedAt: string;
+}
+
 export default function WatchlistView() {
   const { loading, error, data } = useWatchlist();
   const [removeFromWatchlist, { loading: removing }] = useRemoveFromWatchlist();
@@ -36,8 +43,8 @@ export default function WatchlistView() {
   }
 
   const entries = data?.watchlist || [];
-  const unwatched = entries.filter((e: any) => !e.watched);
-  const watched = entries.filter((e: any) => e.watched);
+  const unwatched = entries.filter((e: { watched: boolean }) => !e.watched);
+  const watched = entries.filter((e: { watched: boolean }) => e.watched);
 
   if (entries.length === 0) {
     return (
@@ -66,7 +73,7 @@ export default function WatchlistView() {
         <section className="wl__section">
           <h2 className="wl__section-title">To Watch</h2>
           <div className="wl__list">
-            {unwatched.map((entry: any) => (
+            {unwatched.map((entry: WatchlistEntry) => (
               <div key={entry.id} className="wl__item">
                 <div className="wl__item-poster" onClick={() => navigate(`/movie/${entry.movie.tmdbId}`)}>
                   {entry.movie.posterUrl ? (
@@ -118,7 +125,7 @@ export default function WatchlistView() {
         <section className="wl__section">
           <h2 className="wl__section-title">Watched <span className="wl__section-count">{watched.length}</span></h2>
           <div className="wl__list">
-            {watched.map((entry: any) => (
+            {watched.map((entry: WatchlistEntry) => (
               <div key={entry.id} className="wl__item wl__item--watched">
                 <div className="wl__item-poster" onClick={() => navigate(`/movie/${entry.movie.tmdbId}`)}>
                   {entry.movie.posterUrl ? (

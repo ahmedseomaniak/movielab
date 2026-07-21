@@ -90,7 +90,7 @@ export default function MovieDetail() {
   if (!data?.movie) return null;
 
   const movie = data.movie;
-  const entry = watchlistData?.watchlist?.find((e: any) => e.movie.tmdbId === movie.tmdbId);
+  const entry = watchlistData?.watchlist?.find((e: { movie: { tmdbId: number } }) => e.movie.tmdbId === movie.tmdbId);
   const inWatchlist = !!entry;
   const isWatched = entry?.watched;
 
@@ -193,7 +193,7 @@ export default function MovieDetail() {
           <section className="detail-section">
             <h2 className="detail-section__title">Cast</h2>
             <div className="cast-grid">
-              {movie.cast.slice(0, 12).map((c: any) => (
+              {movie.cast.slice(0, 12).map((c: { name: string; character: string; profileUrl: string }) => (
                 <div key={c.name} className="cast-card">
                   <div className="cast-card__avatar">
                     {c.profileUrl ? (
