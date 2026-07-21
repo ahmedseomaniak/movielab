@@ -9,7 +9,7 @@ Application full-stack de découverte et gestion de films, connectée à l'API T
 | Frontend | React 18, TypeScript 5, Vite 5, Apollo Client 3 |
 | Backend | Spring Boot 3.3, Java 17, Maven |
 | API | GraphQL |
-| Base de données | H2 (fichier local) |
+| Base de données | H2 (local) / PostgreSQL (production) |
 | Monitoring | Prometheus + Grafana (Docker) |
 
 ## Fonctionnalités
@@ -20,6 +20,20 @@ Application full-stack de découverte et gestion de films, connectée à l'API T
 - Détails d'un film (synopsis, affiche, casting, durée)
 - Recommandations personnalisées
 - Watchlist personnelle (ajout/suppression, marquer comme vu)
+
+## Variables d'environnement
+
+Copier `.env.example` vers `.env` et remplir les valeurs :
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Requis | Défaut | Description |
+|---|---|---|---|
+| `TMDB_API_KEY` | Oui | — | Clé API TMDB |
+| `SPRING_PROFILES_ACTIVE` | Non | `h2` | Profil Spring : `h2` ou `postgres` |
+| `VITE_API_URL` | Non | `http://localhost:8080/graphql` | URL de l'API GraphQL |
 
 ## Prérequis
 
