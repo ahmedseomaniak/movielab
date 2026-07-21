@@ -1,0 +1,18 @@
+query TrendingMovies {
+    trendingMovies {
+        tmdbId
+        title
+        overview
+        posterUrl
+        voteAverage
+        genres
+    }
+}
+
+query SearchMovies($query: String!, $page: Int) {
+    searchMovies(query: $query, page: $page) {
+        tmdbId
+        title
+        overview
+    }
+}
