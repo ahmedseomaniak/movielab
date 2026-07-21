@@ -11,3 +11,6 @@ server.err
 server.log
 *.lnk
 opencode.json
+.vercel
+server/*.log
+server/server-startup.*
