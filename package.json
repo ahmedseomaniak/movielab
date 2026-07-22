@@ -1,0 +1,16 @@
+{
+  "name": "movielab",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n client,server -c cyan,green \"npm run dev -w client\" \"npm run dev:server\"",
+    "dev:server": "cd server && .\\mvnw.cmd spring-boot:run -q",
+    "build": "npm run build -w client && cd server && .\\mvnw.cmd package -q -DskipTests",
+    "test": "npm run test -w client && cd server && .\\mvnw.cmd test -q",
+    "lint": "npm run lint -w client",
+    "typecheck": "npm run typecheck -w client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  },
+  "workspaces": ["client"]
+}
