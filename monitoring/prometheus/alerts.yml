@@ -1,0 +1,38 @@
+groups:
+  - name: movielab
+    rules:
+      - alert: HighTmdbErrorRate
+        expr: rate(movielab_tmdb_errors_total[5m]) > 0.1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "TMDB API error rate is high"
+          description: "TMDB API errors rate is {{ $value }} errors/sec over 5m"
+
+      - alert: WatchlistSizeAnomaly
+        expr: movielab_watchlist_size > 100
+        for: 5m
+        labels:
+          severity: info
+        annotations:
+          summary: "Watchlist has grown large"
+          description: "Watchlist contains {{ $value }} entries"
+
+      - alert: HighJvmMemoryUsage
+        expr: jvm_memory_used_bytes{area="heap"} / jvm_memory_max_bytes{area="heap"} > 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "JVM heap usage above 85%"
+          description: "Heap usage is {{ $value | humanizePercentage }}"
+
+      - alert: BackendDown
+        expr: up{job="movielab-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backend is down"
+          description: "movielab-api is unreachable from Prometheus"
