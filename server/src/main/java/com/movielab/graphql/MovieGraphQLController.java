@@ -1,6 +1,7 @@
 package com.movielab.graphql;
 
 import com.movielab.model.Movie;
+import com.movielab.model.MoviePage;
 import com.movielab.service.TmdbService;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
@@ -22,7 +23,7 @@ public class MovieGraphQLController {
     }
 
     @QueryMapping
-    public List<Movie> searchMovies(@Argument String query, @Argument Integer page) {
+    public MoviePage searchMovies(@Argument String query, @Argument Integer page) {
         Timer.Sample sample = Timer.start(meterRegistry);
         try {
             return tmdbService.searchMovies(query, page != null ? page : 1);
@@ -61,9 +62,9 @@ public class MovieGraphQLController {
     }
 
     @QueryMapping
-    public List<Movie> discoverMovies(@Argument List<Integer> genreIds,
-                                       @Argument Double minRating,
-                                       @Argument Integer page) {
+    public MoviePage discoverMovies(@Argument List<Integer> genreIds,
+                                     @Argument Double minRating,
+                                     @Argument Integer page) {
         Timer.Sample sample = Timer.start(meterRegistry);
         try {
             return tmdbService.discoverMovies(genreIds, minRating, page != null ? page : 1);

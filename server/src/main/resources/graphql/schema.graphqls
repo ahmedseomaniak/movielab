@@ -17,6 +17,16 @@ type CastMember {
     profileUrl: String
 }
 
+type PageInfo {
+    currentPage: Int!
+    totalPages: Int!
+}
+
+type MoviePage {
+    items: [Movie!]!
+    pageInfo: PageInfo!
+}
+
 type WatchlistEntry {
     id: ID!
     movie: Movie!
@@ -25,10 +35,10 @@ type WatchlistEntry {
 }
 
 type Query {
-    searchMovies(query: String!, page: Int): [Movie!]!
+    searchMovies(query: String!, page: Int): MoviePage!
     movie(tmdbId: Int!): Movie
     trendingMovies: [Movie!]!
-    discoverMovies(genreIds: [Int!], minRating: Float, page: Int): [Movie!]!
+    discoverMovies(genreIds: [Int!], minRating: Float, page: Int): MoviePage!
     recommendations(tmdbId: Int!): [Movie!]!
     watchlist: [WatchlistEntry!]!
 }
