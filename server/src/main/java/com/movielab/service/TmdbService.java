@@ -1,7 +1,8 @@
 package com.movielab.service;
 
 import com.movielab.model.Movie;
-import com.movielab.model.tmdb.TmdbMovieResponse;
+import com.movielab.model.MoviePage;
+import com.movielab.model.PageInfo;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -18,10 +19,10 @@ public class TmdbService {
         this.movieMapper = movieMapper;
     }
 
-    public List<Movie> searchMovies(String query, int page) {
-        var response = tmdbClient.searchMovies(query, page);
-        List<TmdbMovieResponse> results = response != null ? response.getResults() : Collections.emptyList();
-        return movieMapper.toMovies(results);
+    public MoviePage searchMovies(String query, int page) {
+        return tmdbClient.searchMovies(query, page)
+                .map(r -> new MoviePage(movieMapper.toMovies(r.getResults()), new PageInfo(r.getPage(), r.getTotalPages())))
+                .orElse(new MoviePage(Collections.emptyList(), new PageInfo(1, 1)));
     }
 
     public Movie getMovie(int tmdbId) {
@@ -31,20 +32,20 @@ public class TmdbService {
     }
 
     public List<Movie> getTrendingMovies() {
-        var response = tmdbClient.getTrendingMovies();
-        List<TmdbMovieResponse> results = response != null ? response.getResults() : Collections.emptyList();
-        return movieMapper.toMovies(results);
+        return tmdbClient.getTrendingMovies()
+                .map(r -> movieMapper.toMovies(r.getResults()))
+                .orElse(Collections.emptyList());
     }
 
-    public List<Movie> discoverMovies(List<Integer> genreIds, Double minRating, int page) {
-        var response = tmdbClient.discoverMovies(genreIds, minRating, page);
-        List<TmdbMovieResponse> results = response != null ? response.getResults() : Collections.emptyList();
-        return movieMapper.toMovies(results);
+    public MoviePage discoverMovies(List<Integer> genreIds, Double minRating, int page) {
+        return tmdbClient.discoverMovies(genreIds, minRating, page)
+                .map(r -> new MoviePage(movieMapper.toMovies(r.getResults()), new PageInfo(r.getPage(), r.getTotalPages())))
+                .orElse(new MoviePage(Collections.emptyList(), new PageInfo(1, 1)));
     }
 
     public List<Movie> getRecommendations(int tmdbId) {
-        var response = tmdbClient.getRecommendations(tmdbId);
-        List<TmdbMovieResponse> results = response != null ? response.getResults() : Collections.emptyList();
-        return movieMapper.toMovies(results);
+        return tmdbClient.getRecommendations(tmdbId)
+                .map(r -> movieMapper.toMovies(r.getResults()))
+                .orElse(Collections.emptyList());
     }
 }
