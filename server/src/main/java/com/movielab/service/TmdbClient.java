@@ -3,6 +3,7 @@ package com.movielab.service;
 import com.movielab.model.tmdb.*;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -22,6 +23,7 @@ public class TmdbClient {
                 .register(meterRegistry);
     }
 
+    @Cacheable(cacheNames = "tmdb.search", key = "#query + ':' + #page")
     public TmdbSearchResponse searchMovies(String query, int page) {
         try {
             return restClient.get()
@@ -37,6 +39,7 @@ public class TmdbClient {
         }
     }
 
+    @Cacheable(cacheNames = "tmdb.movie")
     public TmdbMovieResponse getMovie(int tmdbId) {
         try {
             return restClient.get()
@@ -49,6 +52,7 @@ public class TmdbClient {
         }
     }
 
+    @Cacheable(cacheNames = "tmdb.credits")
     public TmdbCreditsResponse getCredits(int tmdbId) {
         try {
             return restClient.get()
@@ -61,6 +65,7 @@ public class TmdbClient {
         }
     }
 
+    @Cacheable(cacheNames = "tmdb.trending")
     public TmdbSearchResponse getTrendingMovies() {
         try {
             return restClient.get()
@@ -73,6 +78,7 @@ public class TmdbClient {
         }
     }
 
+    @Cacheable(cacheNames = "tmdb.discover", key = "#genreIds + ':' + #minRating + ':' + #page")
     public TmdbDiscoverResponse discoverMovies(List<Integer> genreIds, Double minRating, int page) {
         try {
             return restClient.get()
@@ -98,6 +104,7 @@ public class TmdbClient {
         }
     }
 
+    @Cacheable(cacheNames = "tmdb.recommendations")
     public TmdbSearchResponse getRecommendations(int tmdbId) {
         try {
             return restClient.get()
