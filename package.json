@@ -7,9 +7,19 @@
     "build": "npm --prefix client run build && cd server && .\\mvnw.cmd package -q -DskipTests",
     "test": "npm --prefix client run test && cd server && .\\mvnw.cmd test -q",
     "lint": "npm --prefix client run lint",
-    "typecheck": "npm --prefix client run typecheck"
+    "typecheck": "npm --prefix client run typecheck",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "concurrently": "^9.0.0"
+    "concurrently": "^9.0.0",
+    "eslint": "^10.7.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "typescript": "^5.9.3"
+  },
+  "lint-staged": {
+    "client/src/**/*.{ts,tsx}": [
+      "eslint --config client/eslint.config.js --fix"
+    ]
   }
 }

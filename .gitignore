@@ -12,5 +12,6 @@ server.log
 *.lnk
 opencode.json
 .vercel
+.husky/_
 server/*.log
 server/server-startup.*
