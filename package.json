@@ -3,9 +3,9 @@
   "private": true,
   "scripts": {
     "dev": "concurrently -n client,server -c cyan,green \"npm --prefix client run dev\" \"npm run dev:server\"",
-    "dev:server": "cd server && .\\mvnw.cmd spring-boot:run -q",
-    "build": "npm --prefix client run build && cd server && .\\mvnw.cmd package -q -DskipTests",
-    "test": "npm --prefix client run test && cd server && .\\mvnw.cmd test -q",
+    "dev:server": "node server/run-mvn.js spring-boot:run -q",
+    "build": "npm --prefix client run build && node server/run-mvn.js package -q -DskipTests",
+    "test": "npm --prefix client run test && node server/run-mvn.js test -q",
     "lint": "npm --prefix client run lint",
     "typecheck": "npm --prefix client run typecheck",
     "prepare": "husky"

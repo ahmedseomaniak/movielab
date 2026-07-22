@@ -4,10 +4,10 @@ dev:
 	npm run dev
 
 dev:server:
-	cd server && .\mvnw.cmd spring-boot:run -q
+	node server/run-mvn.js spring-boot:run -q
 
 dev:client:
-	npm run dev -w client
+	npm --prefix client run dev
 
 build:
 	npm run build
