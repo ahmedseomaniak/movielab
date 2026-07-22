@@ -6,12 +6,14 @@ import com.movielab.service.WatchlistService;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.BatchMapping;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class WatchlistGraphQLController {
@@ -73,11 +75,15 @@ public class WatchlistGraphQLController {
         }
     }
 
-    @SchemaMapping(typeName = "WatchlistEntry", field = "movie")
-    public Movie movie(WatchlistEntry entry) {
+    @BatchMapping(typeName = "WatchlistEntry", field = "movie")
+    public Map<WatchlistEntry, Movie> movie(List<WatchlistEntry> entries) {
         Timer.Sample sample = Timer.start(meterRegistry);
         try {
-            return watchlistService.getMovieForEntry(entry);
+            return entries.stream()
+                    .collect(Collectors.toMap(
+                            entry -> entry,
+                            entry -> watchlistService.getMovieForEntry(entry)
+                    ));
         } finally {
             sample.stop(Timer.builder("movielab.graphql.query")
                     .tag("query", "watchlist.movie")
