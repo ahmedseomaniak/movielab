@@ -11,8 +11,14 @@ query TrendingMovies {
 
 query SearchMovies($query: String!, $page: Int) {
     searchMovies(query: $query, page: $page) {
-        tmdbId
-        title
-        overview
+        items {
+            tmdbId
+            title
+            overview
+        }
+        pageInfo {
+            currentPage
+            totalPages
+        }
     }
 }
